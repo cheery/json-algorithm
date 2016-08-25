@@ -55,7 +55,6 @@ of choice:
             else:
                 state = code
                 return state
-        return state
 
     # This action table is unique for every language.
     # It also depends on which structures you want to
@@ -125,6 +124,10 @@ NOT try to reformat it by hand to avoid errors.
 This can be probably used to generate random JSON strings as
 well. I haven't tried to do that. :D Could be fun and
 pointless.
+
+## What if I want to encode JSON as well?
+
+
 
 ## Bugfixes
 
