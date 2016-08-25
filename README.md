@@ -112,7 +112,7 @@ of choice:
     escape_characters = {'b': 8, 't': 9, 'n': 10, 'f': 12, 'r': 13}
 
 Add the lists 'states', 'gotos', 'catcode' from
-[json.txt](`json.txt`)
+[json.txt](json.txt)
 in this directory/repository. Add them into same file under
 your application. Also add the comment in that file so that
 your code stays maintainable.
