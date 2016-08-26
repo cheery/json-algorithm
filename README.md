@@ -162,7 +162,7 @@ character after each JSON message. This lets the recipients
 JSON parser reach the state where it receives the JSON
 object.
 
-But maybe it's better to use the <length>#<json_message>
+But maybe it's better to use the length#json_message
 -protocol. :) Very few other JSON parsers are able of doing
 this.
 
