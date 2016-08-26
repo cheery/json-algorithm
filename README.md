@@ -72,32 +72,32 @@ of choice:
             val = ds.pop()
             key = ds.pop()
             ds[len(ds)-1][key] = val
-        elif action == 0x10:           # push null
+        elif action == 0x5:           # push null
             ds.append(None)
-        elif action == 0x20:           # push true
+        elif action == 0x6:           # push true
             ds.append(True)
-        elif action == 0x30:           # push false
+        elif action == 0x7:           # push false
             ds.append(False)
-        elif action == 0x40:           # push string
+        elif action == 0x8:           # push string
             val = u"".join(ss)
             ds.append(val)
             ss[:] = [] # clear ss and es stacks.
             es[:] = []
-        elif action == 0x50:
+        elif action == 0x9:
             val = int(u"".join(ss))    # push int
             ds.append(val)
             ss[:] = [] # clear ss stack.
-        elif action == 0x60:
+        elif action == 0xA:
             val = float(u"".join(ss))  # push float
             ds.append(val)
             ss[:] = []
-        elif action == 0xA:            # push ch to ss
+        elif action == 0xB:            # push ch to ss
             ss.append(ch)
-        elif action == 0xB:            # push ch to es
+        elif action == 0xC:            # push ch to es
             es.append(ch)
-        elif action == 0xC:            # push escape
+        elif action == 0xD:            # push escape
             ss.append(unichr(escape_characters[ch]))
-        elif action == 0xD:            # push unicode point
+        elif action == 0xE:            # push unicode point
             ss.append(unichr(int(u"".join(es), 16)))
             es[:] = []
         else: # This is very unlikely to happen. But make
@@ -125,9 +125,73 @@ This can be probably used to generate random JSON strings as
 well. I haven't tried to do that. :D Could be fun and
 pointless.
 
+## How is this special?
+
+This project is unique in the sense that it is probably the
+easiest to port JSON decoder you can write.
+
+If you wanted to port this, you would only have to rewrite
+the driver and reformat the parsing tables.
+
+Also the algorithm is incremental. You can suspend it after
+any character input. It also builds the JSON as it appears.
+
+With small modification it'd be able to parse multiple JSON
+objects and pass them as they appear in the stream.
+
+## Potential uses
+
+The driver is divided into a recognizer and action table. If
+the recognizer finds an input not in JSON syntax, it raises
+a SYN error.
+
+The input is interpreted according to how you program the
+do_action -procedure.
+
+If you want to frown people with traditional JSON parsers,
+you could adjust the driver to parse multiple objects and
+read JSON objects as they appear in the TCP stream.
+
+After every JSON object:
+
+    if len(ds) > 0 and state == 0:
+        return ds.pop(0)
+
+If you do this, remember to emit newline or whitespace
+character after each JSON message. This lets the recipients
+JSON parser reach the state where it receives the JSON
+object.
+
+But maybe it's better to use the <length>#<json_message>
+-protocol. :) Very few other JSON parsers are able of doing
+this.
+
+This is also useful if you don't have a JSON parser you
+could trust. For example if your parser mishandles backslash
+characters and doubles them on decode/encode. Or if your
+parser misrecognizes floats because it tries to parse ','
+rather than '.'.
+
+The code that you write to use this driver gets easily
+tested. And the tables containing the recognizer come from
+this project, so you can trust those tables have the same
+behavior as here.
+
+Also can be useful if you want to read the JSON floats into
+something else than floating point floats. Just write your
+own do_action that does it differently.
+
 ## What if I want to encode JSON as well?
 
+To encode JSON you need some routines to tokenize strings
+and integers. You may also require a pretty printer.
 
+[CS-TR-79-770](http://i.stanford.edu/TR/CS-TR-79-770.html)
+describes a pretty printing method that should be sufficient
+for tokenizing JSON.
+
+There will be an example of pretty
+printing encoding soon as I need to do this as well.
 
 ## Bugfixes
 
@@ -137,6 +201,10 @@ transition.
 
 If you find a bug in the tables, do not modify them. Modify
 the program `build_tables.py` or file an issue in github.com.
+
+Verifying that it works was tricky. The coverage test
+I did catched quite few bugs. I'm quite certain it matches
+with the railroad diagram on the json.org now.
 
 ## License
 

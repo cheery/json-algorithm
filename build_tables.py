@@ -34,17 +34,17 @@ def pval(table):
         '[': 0x8140,
         '{': 0x8250,
         '"': 0x8060,
-        '0': 0x8A76,
-        '1': 0x8A70,
-        '2': 0x8A70,
-        '3': 0x8A70,
-        '4': 0x8A70,
-        '5': 0x8A70,
-        '6': 0x8A70,
-        '7': 0x8A70,
-        '8': 0x8A70,
-        '9': 0x8A70,
-        '-': 0x8A78,
+        '0': 0x8B76,
+        '1': 0x8B70,
+        '2': 0x8B70,
+        '3': 0x8B70,
+        '4': 0x8B70,
+        '5': 0x8B70,
+        '6': 0x8B70,
+        '7': 0x8B70,
+        '8': 0x8B70,
+        '9': 0x8B70,
+        '-': 0x8B78,
     })
     return sskip(table)
 
@@ -59,9 +59,9 @@ def hexv(table, cmd):
 states = {
     0x00: pval({ }),
     # null, true, false
-    0x10: { 'u': 0x11 }, 0x11: { 'l': 0x12 }, 0x12: { 'l': 0x13 }, 0x13: { '': 0x10FF },
-    0x20: { 'r': 0x21 }, 0x21: { 'u': 0x22 }, 0x22: { 'e': 0x23 }, 0x23: { '': 0x20FF },
-    0x30: { 'a': 0x31 }, 0x31: { 'l': 0x32 }, 0x32: { 's': 0x33 }, 0x33: { 'e': 0x34 }, 0x34: { '': 0x30FF },
+    0x10: { 'u': 0x11 }, 0x11: { 'l': 0x12 }, 0x12: { 'l': 0x13 }, 0x13: { '': 0x05FF },
+    0x20: { 'r': 0x21 }, 0x21: { 'u': 0x22 }, 0x22: { 'e': 0x23 }, 0x23: { '': 0x06FF },
+    0x30: { 'a': 0x31 }, 0x31: { 'l': 0x32 }, 0x32: { 's': 0x33 }, 0x33: { 'e': 0x34 }, 0x34: { '': 0x07FF },
     # lists
     0x40: pval({ # first
         ']': 0x4F,
@@ -93,56 +93,56 @@ states = {
 
     0x5F: { '': 0x00FF },
     # strings
-    0x60: { '"': 0x6F, '': 0x0A60, '\\': 0x61 },
+    0x60: { '"': 0x6F, '': 0x0B60, '\\': 0x61 },
     0x61: {
-        '"': 0x0A60, '\\': 0x0A60, '/': 0x0A60,
-        'b': 0x0C60, 'f': 0x0C60, 'n': 0x0C60, 'r': 0x0C60, 't': 0x0C60,
+        '"': 0x0B60, '\\': 0x0B60, '/': 0x0B60,
+        'b': 0x0D60, 'f': 0x0D60, 'n': 0x0D60, 'r': 0x0D60, 't': 0x0D60,
         'u': 0x8062,
     },
-    0x62: hexv({}, 0x0B63),
-    0x63: hexv({}, 0x0B64),
-    0x64: hexv({}, 0x0B65),
-    0x65: hexv({}, 0x0B66),
-    0x66: { '': 0x0DFF },
-    0x6F: { '': 0x40FF },
+    0x62: hexv({}, 0x0C63),
+    0x63: hexv({}, 0x0C64),
+    0x64: hexv({}, 0x0C65),
+    0x65: hexv({}, 0x0C66),
+    0x66: { '': 0x0EFF },
+    0x6F: { '': 0x08FF },
     # numbers
     0x70: { # after 1-9
-        '0': 0x0AFE, '1': 0x0AFE, '2': 0x0AFE, '3': 0x0AFE, '4': 0x0AFE,
-        '5': 0x0AFE, '6': 0x0AFE, '7': 0x0AFE, '8': 0x0AFE, '9': 0x0AFE,
-        '.': 0x0A71, 'e': 0x0A73, 'E': 0x0A73,
-        '': 0x50FF
+        '0': 0x0BFE, '1': 0x0BFE, '2': 0x0BFE, '3': 0x0BFE, '4': 0x0BFE,
+        '5': 0x0BFE, '6': 0x0BFE, '7': 0x0BFE, '8': 0x0BFE, '9': 0x0BFE,
+        '.': 0x0B71, 'e': 0x0B73, 'E': 0x0B73,
+        '': 0x09FF
     },
     0x71: { # after a dot.
-        '0': 0x0A72, '1': 0x0A72, '2': 0x0A72, '3': 0x0A72, '4': 0x0A72,
-        '5': 0x0A72, '6': 0x0A72, '7': 0x0A72, '8': 0x0A72, '9': 0x0A72,
+        '0': 0x0B72, '1': 0x0B72, '2': 0x0B72, '3': 0x0B72, '4': 0x0B72,
+        '5': 0x0B72, '6': 0x0B72, '7': 0x0B72, '8': 0x0B72, '9': 0x0B72,
     },
     0x72: { # after a dot digit
-        '0': 0x0AFE, '1': 0x0AFE, '2': 0x0AFE, '3': 0x0AFE, '4': 0x0AFE,
-        '5': 0x0AFE, '6': 0x0AFE, '7': 0x0AFE, '8': 0x0AFE, '9': 0x0AFE,
-        'e': 0x0A73, 'E': 0x0A73,
-        '': 0x60FF,
+        '0': 0x0BFE, '1': 0x0BFE, '2': 0x0BFE, '3': 0x0BFE, '4': 0x0BFE,
+        '5': 0x0BFE, '6': 0x0BFE, '7': 0x0BFE, '8': 0x0BFE, '9': 0x0BFE,
+        'e': 0x0B73, 'E': 0x0B73,
+        '': 0x0AFF,
     },
     0x73: { # after eE
-        '0': 0x0A75, '1': 0x0A75, '2': 0x0A75, '3': 0x0A75, '4': 0x0A75,
-        '5': 0x0A75, '6': 0x0A75, '7': 0x0A75, '8': 0x0A75, '9': 0x0A75,
-        '+': 0x0A74, '-': 0x0A74,
+        '0': 0x0B75, '1': 0x0B75, '2': 0x0B75, '3': 0x0B75, '4': 0x0B75,
+        '5': 0x0B75, '6': 0x0B75, '7': 0x0B75, '8': 0x0B75, '9': 0x0B75,
+        '+': 0x0B74, '-': 0x0B74,
     },
     0x74: { # after eE-+
-        '0': 0x0A75, '1': 0x0A75, '2': 0x0A75, '3': 0x0A75, '4': 0x0A75,
-        '5': 0x0A75, '6': 0x0A75, '7': 0x0A75, '8': 0x0A75, '9': 0x0A75,
+        '0': 0x0B75, '1': 0x0B75, '2': 0x0B75, '3': 0x0B75, '4': 0x0B75,
+        '5': 0x0B75, '6': 0x0B75, '7': 0x0B75, '8': 0x0B75, '9': 0x0B75,
     },
     0x75: { # after eE-+ digit
-        '0': 0x0AFE, '1': 0x0AFE, '2': 0x0AFE, '3': 0x0AFE, '4': 0x0AFE,
-        '5': 0x0AFE, '6': 0x0AFE, '7': 0x0AFE, '8': 0x0AFE, '9': 0x0AFE,
-        '': 0x60FF,
+        '0': 0x0BFE, '1': 0x0BFE, '2': 0x0BFE, '3': 0x0BFE, '4': 0x0BFE,
+        '5': 0x0BFE, '6': 0x0BFE, '7': 0x0BFE, '8': 0x0BFE, '9': 0x0BFE,
+        '': 0x0AFF,
     },
     0x76: { # after 0
-        '.': 0x0A71, 'e': 0x0A73, 'E': 0x0A73,
-        '': 0x50FF
+        '.': 0x0B71, 'e': 0x0B73, 'E': 0x0B73,
+        '': 0x09FF
     },
     0x78: { # '-'
-        '0': 0x0A76, '1': 0x0A70, '2': 0x0A70, '3': 0x0A70, '4': 0x0A70,
-        '5': 0x0A70, '6': 0x0A70, '7': 0x0A70, '8': 0x0A70, '9': 0x0A70,
+        '0': 0x0B76, '1': 0x0B70, '2': 0x0B70, '3': 0x0B70, '4': 0x0B70,
+        '5': 0x0B70, '6': 0x0B70, '7': 0x0B70, '8': 0x0B70, '9': 0x0B70,
     },
 }
 # This program is different from LR parsing tables quite radically such that it
@@ -178,15 +178,15 @@ for n in range(0, 0x7F):
     else:
         groups[catset] = chr(n)
 
-# Then we extract the results into catcodes -table. The idea is you clamp
+# Then we extract the results into catcode -table. The idea is you clamp
 # character ordinal to this range and index from this table. The last
 # character '~' happens to be 'anychar', so that simple min(n, 0x7E) works.
-catcodes = [0 for n in range(0, 0x7F)]
+catcode = [0 for n in range(0, 0x7F)]
 groups.pop(anychar)
 columns = [dict(anychar)]
 for col, string in sorted(groups.items(), key=lambda a: a[1]):
     for ch in string:
-        catcodes[ord(ch)] = len(columns)
+        catcode[ord(ch)] = len(columns)
     columns.append(dict(col))
 
 # The state transitions need to be listed and relabeled by list index.
@@ -219,7 +219,7 @@ for row in packedtable:
     print '],'
 print ']'
 print "gotos =",    packedgotos
-print "catcodes =", catcodes
+print "catcode =", catcode
 
 # # These can be used for debugging.
 # print "mapping =",  mapper
@@ -279,32 +279,32 @@ print "catcodes =", catcodes
 #         val = ds.pop()
 #         key = ds.pop()
 #         ds[len(ds)-1][key] = val
-#     elif action == 0x10:
+#     elif action == 0x5:
 #         ds.append(None)
-#     elif action == 0x20:
+#     elif action == 0x6:
 #         ds.append(True)
-#     elif action == 0x30:
+#     elif action == 0x7:
 #         ds.append(False)
-#     elif action == 0x40:
+#     elif action == 0x8:
 #         val = u"".join(ss)
 #         ds.append(val)
 #         ss[:] = []
 #         es[:] = []
-#     elif action == 0x50:
+#     elif action == 0x9:
 #         val = int(u"".join(ss))
 #         ds.append(val)
 #         ss[:] = []
-#     elif action == 0x60:
+#     elif action == 0xA:
 #         val = float(u"".join(ss))
 #         ds.append(val)
 #         ss[:] = []
-#     elif action == 0xA:
-#         ss.append(ch)
 #     elif action == 0xB:
-#         es.append(ch)
+#         ss.append(ch)
 #     elif action == 0xC:
-#         ss.append(escape_characters[ch])
+#         es.append(ch)
 #     elif action == 0xD:
+#         ss.append(escape_characters[ch])
+#     elif action == 0xE:
 #         ss.append(unichr(int(u"".join(es), 16)))
 #         es[:] = []
 #     else:
