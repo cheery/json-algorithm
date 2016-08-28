@@ -168,6 +168,8 @@ class Scanner(object):
         return self
 
     def finish(self):
+        if self.lastblank is not None:              # Without this the last blank
+            self.lastblank.size += self.right_total # gets very different treatment.
         while len(self.stream) > 0:
             self.printer(self.stream.pop(0))
         sys.stdout.write('\n')
@@ -191,7 +193,7 @@ class Printer(object):
                 self.layout = self.layout.parent
             return 0
         elif isinstance(x, Blank):
-            if x.size > self.spaceleft or self.layout.force_break:
+            if x.size < 0 or self.spaceleft < x.size or self.layout.force_break:
                 self.spaces = self.layout.spaces - x.indent
                 self.spaceleft = self.spaces
                 sys.stdout.write('\n' + ' '*(self.margin - self.spaces))
