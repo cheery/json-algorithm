@@ -2,7 +2,7 @@
 
 Everyone and their dog already has a json parsing and
 encoding library. So this module is more of a fun curiosity
-rather than an useful tool. 
+rather than a useful tool. 
 
 Now even your pet rock is able to parse JSON.
 
@@ -12,7 +12,7 @@ The code in the [build_tables.py](build_tables.py)
 constructs a parsing table that matches on the railroad
 diagrams at http://json.org/
 
-There's a recognizer that can push&pop states into a stack.
+There's a recognizer that can push and pop states into a stack.
 Every state transition is associated with action code that
 is separate from the recognizer and allows you to parse the
 contents of the input correctly.
