@@ -190,8 +190,27 @@ and integers. You may also require a pretty printer.
 describes a pretty printing method that should be sufficient
 for tokenizing JSON.
 
-There will be an example of pretty
-printing encoding soon as I need to do this as well.
+There's a short example of the algorithm described by that
+paper in the `printer.py`. Call it with a json file and it
+will parse your file with `verifier.py` and then pretty
+prints it out.
+
+The `printer.py` holds everything for stringifying
+JSON except the float formatter. 
+
+## Unicode Gotcha
+
+This code and algorithms should be neutral about handling
+unicode characters.
+
+With some tuning the pretty printer should even be able to
+handle output with non-monospace fonts. Though for
+convenience please treat plaintext json output as if it was
+monospace.
+
+Whether this code can handle unicode characters depends on
+the code implemented and the programming language you use to
+implement it.
 
 ## Bugfixes
 

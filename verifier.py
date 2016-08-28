@@ -70,23 +70,7 @@ inputs = [
 def main():
     chart = set()
     for input in inputs:
-        #print input
-        stack = []
-        state = 0x00
-        ds = [] # data stack
-        ss = [] # string stack
-        es = [] # escape stack
-        for ch in input:
-            cat = catcode[min(ord(ch), 0x7E)]
-            state = parse_ch(cat, ch, stack, state, ds, ss, es, chart)
-        state = parse_ch(catcode[32], u'', stack, state, ds, ss, es, chart)
-        if state != 0x00:
-            raise Exception("JSON decode error: truncated")
-        if len(ds) != 1:
-            raise Exception("JSON decode error: too many objects")
-        val = ds.pop()
-        print val
-
+        print parse_string(input, chart)
     v = len(chart)
     t = 0
     for row in states:
@@ -97,6 +81,22 @@ def main():
         for cat, code in enumerate(row):
             if code & 255 != 0xFF and (state, cat) not in chart:
                 print "not visited:", hex(state), hex(cat), repr("".join(chr(g) for g, cc in enumerate(catcode) if cc == cat)), hex(code)
+
+def parse_string(string, chart):
+    stack = []
+    state = 0x00
+    ds = [] # data stack
+    ss = [] # string stack
+    es = [] # escape stack
+    for ch in string:
+        cat = catcode[min(ord(ch), 0x7E)]
+        state = parse_ch(cat, ch, stack, state, ds, ss, es, chart)
+    state = parse_ch(catcode[32], u'', stack, state, ds, ss, es, chart)
+    if state != 0x00:
+        raise Exception("JSON decode error: truncated")
+    if len(ds) != 1:
+        raise Exception("JSON decode error: too many objects")
+    return ds.pop()
 
 def parse_ch(cat, ch, stack, state, ds, ss, es, chart):
     while True:
